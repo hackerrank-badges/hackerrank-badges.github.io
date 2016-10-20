@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HackerRank Badge</title>
+    <link rel="shortcut icon" href="images/favicon.png">
+    <link rel="stylesheet" href="stylesheets/screen.css" media="screen">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script>
+    </script>
+    <style type="text/css">
+        #hackerrank-logo {
+                background: url(images/logo_wordmark-vertical-800x645.png) no-repeat center;
+                float: right;
+                background-size: contain;
+                height: 410px;
+                width: 50%;
+        }
+        h1 #hackerrank-span {
+            background: url(images/hackerrank_logo.png) no-repeat 0 -20px;
+            float: right;
+            background-size: contain;
+            color: #000;
+            display: block;
+            font-size: 50px;
+            height: 66px;
+            text-indent: -999px;
+            width: 270px;
+            background-position: initial;
+        }
+    </style>
+</head>
+<body>
+<div id="fork-me">
+    <a href="https://github.com/alvarojoao/hackerrankbadge"
+       title="Fork me on GitHub">
+        <img alt="Fork me on GitHub" src="images/fork-me-on-github-ribbon-black.png">
+    </a>
+</div>
+<div id="container">
+    <div id="octocat">
+        <div id="hackerrank-logo">
+            &nbsp;
+        </div>
+        <h1>Get your <br/> <span id="hackerrank-span">HackerRank</span> badge now!</h1>
+
+        <div id="preview">
+            <h3>Preview</h3>
+            <iframe id="previewFrame" src="https://hackerrank-badge.herokuapp.com/alvarojoao" scrolling="no"
+                    style="border: 0; height: 230px; width: 240px; overflow:hidden;"  frameBorder="0"></iframe>
+        </div>
+    </div>
+    <div id="form" style="    margin-top: 96px; ">
+        <div id="form-container">
+            <div class="clear top">
+                <input type="text" autocomplete="off" id="username"
+                       name="username"
+                       placeholder="Your GitHub username">
+            </div>
+            <div id="form-left-column">
+                <div>
+                    <input type="checkbox" id="support" name="s">
+                    <label for="support">Support HackRank Badge</label>
+                </div>
+                 <div style="display: none;">
+                    <input type="checkbox" id="analytics" name="a">
+                    <label for="analytics">Disable Google Analytics on badge</label>
+                </div> 
+            </div>
+            <div id="form-right-column">
+                <div id="tweet">
+                    <a href="https://twitter.com/share" class="twitter-share-button"
+                       data-count="none" data-text="I just got my @github badge with a cool commit graph from"
+                       data-url="http://alvarojoao.github.io/hackerrankbadge/" data-hashtags="hackerrankbadge">Tweet</a>
+                </div>
+                <input style="display: none;" type="checkbox" id="hackers">
+                <label style="display: none;" for="hackers">All your JSON-API belong to us!</label>
+                <div style="display: none;" id="api-samples">
+                    See examples for <a href="http://jsfiddle.net/yvzSL/">JSONP</a> or
+                    for <a href="http://jsfiddle.net/Bc67u/">CORS</a>.
+                </div> 
+            </div>
+        </div>
+    </div>
+    <input id="code">
+
+    <section id="site-info">
+        <div id="about">
+            <h2>About</h2>
+            <p>
+                Hacker badge is a simple embeddable badge showing your Hacker Rank
+                stats like the number of medals earned, favorite languages, badges earned, current level, and last submissions' status etc. 
+            </p>
+            <p>
+                Do you have an idea of a missing feature or have you found a bug? Please
+                <a href="https://github.com/alvarojoao/hackerrankbadge/issues">report</a>!
+            </p>
+        </div>
+    </section>
+
+    <div id="footer">
+        <p>
+            Brought to you by <a href="https://github.com/alvarojoao"
+                                 title="Alvaro Joao">Alvaro Joao</a> <br/>
+            Especial thanks for  <a href="https://github.com/berkerpeksag"
+                                 title="Berker Peksag">Berker Peksag</a>
+            (@<a href="http://twitter.com/berkerpeksag" title="berkerpeksag">berkerpeksag</a>) with <a href="http://githubbadge.appspot.com/"
+                                 title="Github Badge">Github Badge</a>
+        </p>
+    </div>
+</div>
+<script src="javascript/spin.min.js"></script>
+<script>
+    (function () {
+        var gId = function (id) { return document.getElementById(id); },
+                usernameInput = gId('username'),
+                supportCheck = gId('support'),
+                analyticsCheck = gId('analytics'),
+                hackersCheck = gId('hackers'),
+                previewFrame = gId('previewFrame'),
+                codeArea = gId('code'),
+                lastUser = 'mojombo',
+                loc = {protocol:'https:',host:'hackerrank-badge.herokuapp.com'},
+                urlTemplate = [loc.protocol, '', loc.host, ':user'].join('/'),
+                codeTemplate = '<iframe src=":url" style="border: 0; height: 230px; width: 240px; overflow:hidden;" scrolling="no" frameBorder="0"></iframe>',
+                previewArea = gId('preview'),
+                spinNewLink = gId('spin-new'),
+                spinner;
+        var updateEverything = function updateEverything() {
+            var username = usernameInput.value;
+            if (!username) return;
+            var url = urlTemplate.replace(':user', encodeURI(username)),
+                    options = [];
+            if (hackersCheck!=null&&!hackersCheck.checked) {
+                if (supportCheck.checked) options.push('s=1');
+                if (analyticsCheck!=null&&analyticsCheck.checked) options.push('a=0');
+                if (options.length) url += '?' + options.join('&');
+            }
+            if (!spinner)
+                spinner = new Spinner();
+            spinner.spin(previewArea);
+            previewFrame.onload = function () {spinner && spinner.stop()};
+            previewFrame.setAttribute('src', url);
+            
+            codeArea.value = hackersCheck.checked ?
+                                url : codeTemplate.replace(':url', url);
+            codeArea.style.display = 'block';
+            lastUser = usernameInput.value;
+        };
+        var keyupHandler = function keyupHandler() {
+            if (keyupHandler.timer)
+                window.clearTimeout(keyupHandler.timer);
+            if (usernameInput.value.length && usernameInput.value != lastUser)
+                keyupHandler.timer = window.setTimeout(updateEverything, 500);
+        };
+        usernameInput.onkeyup = keyupHandler;
+        supportCheck.onchange = analyticsCheck.onchange = hackersCheck.onchange = updateEverything;
+        codeArea.onclick = function () {
+            codeArea.focus();
+            codeArea.select()
+        };
+        spinNewLink.onclick = function () {
+            // A delay is necessary
+            window.setTimeout(function () { usernameInput.focus(); }, 10);
+        };
+    })();
+</script>
+<script src="//platform.twitter.com/widgets.js"></script>
+</body>
+</html>
